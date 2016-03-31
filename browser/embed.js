@@ -71,7 +71,7 @@
 		requestFullscreen(i)
 	})
 
-	document.addEventListener('devicemotion', localDeviceMotion)
-	document.addEventListener('orientationchange', localOrientationChange)
+	window.addEventListener('devicemotion', localDeviceMotion)
+	window.addEventListener('orientationchange', localOrientationChange)
 
 })()
