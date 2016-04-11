@@ -60,7 +60,7 @@ function uploadFile(file) {
 	return dfd.promise
 }
 
-function postPasteFixup(nodes) {
+function postPasteFixup(nodes, position) {
 	function fixupNode(node) {
 		if (node.plugin.id === "graph") {
 			for (var i = 0, len = node.plugin.graph.nodes.length; i < len; ++i) {
@@ -69,7 +69,7 @@ function postPasteFixup(nodes) {
 		}
 
 		if (node.plugin.id === 'three_loader_scene') {
-			node.plugin.requiresScaling = true
+			node.plugin.postLoadCallback = new ObjectPlacementHelper(position)
 		}
 	}
 
@@ -162,7 +162,7 @@ function instantiateTemplateForUpload(uploaded, position) {
 		// paste. auto-connecting to the scene will be handled inside paste
 		// by the world editor
 		var pasted = E2.app.onPaste(copyBuffer)
-		postPasteFixup(pasted.nodes)
+		postPasteFixup(pasted.nodes, position)
 
 		E2.app.undoManager.end()
 

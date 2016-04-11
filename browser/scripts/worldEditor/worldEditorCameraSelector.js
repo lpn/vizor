@@ -192,7 +192,9 @@ WorldEditorCameraSelector.prototype = {
 		if (vrCamera && this.currentCameraId === 'vr') {
 			// keep the editor vr camera in sync with the current vr camera plugin
 			vrCamera.updateMatrixWorld()
-			this.cameras.vr.camera.camera.matrixWorld.copy(vrCamera.matrixWorld)
+
+			var threeCamera = this.cameras.vr.camera.camera
+			threeCamera.matrixWorld.copy(vrCamera.matrixWorld)
 		}
 	}
 }
