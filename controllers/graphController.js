@@ -314,7 +314,7 @@ GraphController.prototype.embed = function(req, res, next) {
 			return next()
 
 		return renderPlayer(graph, req, res, {
-			isEmbed: true,
+			isEmbedded: true,
 			autoplay: req.query.autoplay || false,
 			noHeader: req.query.noheader || false
 		})

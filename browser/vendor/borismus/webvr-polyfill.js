@@ -1,97 +1,4 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
-// shim for using process in browser
-
-var process = module.exports = {};
-var queue = [];
-var draining = false;
-var currentQueue;
-var queueIndex = -1;
-
-function cleanUpNextTick() {
-    draining = false;
-    if (currentQueue.length) {
-        queue = currentQueue.concat(queue);
-    } else {
-        queueIndex = -1;
-    }
-    if (queue.length) {
-        drainQueue();
-    }
-}
-
-function drainQueue() {
-    if (draining) {
-        return;
-    }
-    var timeout = setTimeout(cleanUpNextTick);
-    draining = true;
-
-    var len = queue.length;
-    while(len) {
-        currentQueue = queue;
-        queue = [];
-        while (++queueIndex < len) {
-            if (currentQueue) {
-                currentQueue[queueIndex].run();
-            }
-        }
-        queueIndex = -1;
-        len = queue.length;
-    }
-    currentQueue = null;
-    draining = false;
-    clearTimeout(timeout);
-}
-
-process.nextTick = function (fun) {
-    var args = new Array(arguments.length - 1);
-    if (arguments.length > 1) {
-        for (var i = 1; i < arguments.length; i++) {
-            args[i - 1] = arguments[i];
-        }
-    }
-    queue.push(new Item(fun, args));
-    if (queue.length === 1 && !draining) {
-        setTimeout(drainQueue, 0);
-    }
-};
-
-// v8 likes predictible objects
-function Item(fun, array) {
-    this.fun = fun;
-    this.array = array;
-}
-Item.prototype.run = function () {
-    this.fun.apply(null, this.array);
-};
-process.title = 'browser';
-process.browser = true;
-process.env = {};
-process.argv = [];
-process.version = ''; // empty string to avoid regexp issues
-process.versions = {};
-
-function noop() {}
-
-process.on = noop;
-process.addListener = noop;
-process.once = noop;
-process.off = noop;
-process.removeListener = noop;
-process.removeAllListeners = noop;
-process.emit = noop;
-
-process.binding = function (name) {
-    throw new Error('process.binding is not supported');
-};
-
-process.cwd = function () { return '/' };
-process.chdir = function (dir) {
-    throw new Error('process.chdir is not supported');
-};
-process.umask = function() { return 0; };
-
-},{}],2:[function(_dereq_,module,exports){
 (function (process,global){
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.
@@ -1049,7 +956,100 @@ process.umask = function() { return 0; };
 
 
 }).call(this,_dereq_('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":1}],3:[function(_dereq_,module,exports){
+},{"_process":2}],2:[function(_dereq_,module,exports){
+// shim for using process in browser
+
+var process = module.exports = {};
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = setTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    clearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        setTimeout(drainQueue, 0);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],3:[function(_dereq_,module,exports){
 /*
  * Copyright 2015 Google Inc. All Rights Reserved.
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -4467,12 +4467,6 @@ MouseKeyboardVRDisplay.prototype.getImmediatePose = function() {
 };
 
 MouseKeyboardVRDisplay.prototype.onKeyDown_ = function(e) {
-
-  // vizor.io gm #1504
-  if (E2 && E2.app && !E2.app.canInitiateCameraMove(e))
-      return true
-  // end vizor.io gm #1504
-
   // Track WASD and arrow keys.
   if (e.keyCode == 38) { // Up key.
     this.animatePhi_(this.phi_ + KEY_SPEED);
@@ -4521,10 +4515,10 @@ MouseKeyboardVRDisplay.prototype.animateKeyTransitions_ = function(angleName, ta
 };
 
 MouseKeyboardVRDisplay.prototype.onMouseDown_ = function(e) {
-  // vizor.io gm #1504
-  if (E2 && E2.app &&  !E2.app.canInitiateCameraMove(e))
+  if (WebVRConfig &&
+      ((typeof WebVRConfig.canInitiateCameraMove === 'function'  &&  WebVRConfig.canInitiateCameraMove(e) === false)
+          || WebVRConfig.canInitiateCameraMove === false))
       return true
-  // end vizor.io gm #1504
 
   this.rotateStart_.set(e.clientX, e.clientY);
   this.isDragging_ = true;
@@ -4547,22 +4541,9 @@ MouseKeyboardVRDisplay.prototype.onMouseMove_ = function(e) {
   this.rotateDelta_.subVectors(this.rotateEnd_, this.rotateStart_);
   this.rotateStart_.copy(this.rotateEnd_);
 
-  // vizor.io gm #896
-  var element = document.body,
-      height = element.clientHeight,
-      width = element.clientWidth
-
-  if (WebVRConfig && WebVRConfig.getContainerMeta) {
-     var meta = WebVRConfig.getContainerMeta()
-     height  = meta.height
-     width   = meta.width
-  }
-
   // Keep track of the cumulative euler angles.
-  this.phi_ += 2 * Math.PI * this.rotateDelta_.y / height * MOUSE_SPEED_Y;
-  this.theta_ += 2 * Math.PI * this.rotateDelta_.x / width * MOUSE_SPEED_X;
-
-  // end vizor.io gm #896
+  this.phi_ += 2 * Math.PI * this.rotateDelta_.y / screen.height * MOUSE_SPEED_Y;
+  this.theta_ += 2 * Math.PI * this.rotateDelta_.x / screen.width * MOUSE_SPEED_X;
 
   // Prevent looking too far up or down.
   this.phi_ = Util.clamp(this.phi_, -Math.PI/2, Math.PI/2);
@@ -5038,7 +5019,7 @@ FusionPoseSensor.prototype.onDeviceMotionChange_ = function(deviceMotion) {
   var deltaS = timestampS - this.previousTimestampS;
   if (deltaS <= Util.MIN_TIMESTEP || deltaS > Util.MAX_TIMESTEP) {
     console.warn('Invalid timestamps detected. Time step between successive ' +
-                 'gyroscope sensor samples is very small or not monotonic ');
+                 'gyroscope sensor samples is very small or not monotonic');
     this.previousTimestampS = timestampS;
     return;
   }
@@ -7524,11 +7505,10 @@ TouchPanner.prototype.resetSensor = function() {
 };
 
 TouchPanner.prototype.onTouchStart_ = function(e) {
-
-    // vizor.io gm #1504
-    if (E2 && E2.app &&  !E2.app.canInitiateCameraMove(e))
-        return
-    // end vizor.io gm #1504
+    if (WebVRConfig &&
+        ((typeof WebVRConfig.canInitiateCameraMove === 'function'  &&  WebVRConfig.canInitiateCameraMove(e) === false)
+          || WebVRConfig.canInitiateCameraMove === false))
+      return true
 
   // Only respond if there is exactly one touch.
   if (e.touches.length != 1) {
@@ -7578,7 +7558,7 @@ module.exports = TouchPanner;
  */
 var Util = window.Util || {};
 
-Util.MIN_TIMESTEP = 0.0008;
+Util.MIN_TIMESTEP = 0.001;
 Util.MAX_TIMESTEP = 1;
 
 Util.base64 = function(mimeType, base64) {
@@ -7781,7 +7761,7 @@ function ViewerSelector() {
   try {
     this.selectedKey = localStorage.getItem(VIEWER_KEY) || DEFAULT_VIEWER;
   } catch (error) {
-    this.selectedKey = DEFAULT_VIEWER;  // should localStorage fail (typically in iframe)
+    this.selectedKey = DEFAULT_VIEWER;  // gm^vizor.io: should localStorage fail (typically in iframe)
     console.error('Failed to load viewer profile: %s', error);
   }
   this.dialog = this.createDialog_(DeviceInfo.Viewers);
@@ -8209,4 +8189,4 @@ WebVRPolyfill.prototype.isCardboardCompatible = function() {
 
 module.exports = WebVRPolyfill;
 
-},{"./base.js":3,"./cardboard-vr-display.js":6,"./display-wrappers.js":9,"./mouse-keyboard-vr-display.js":15,"es6-promise":2}]},{},[14]);
+},{"./base.js":3,"./cardboard-vr-display.js":6,"./display-wrappers.js":9,"./mouse-keyboard-vr-display.js":15,"es6-promise":1}]},{},[14]);

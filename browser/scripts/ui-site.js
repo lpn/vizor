@@ -265,7 +265,9 @@ var siteUI = new function() {
                 }
             }
 
+			WebVRConfig.canInitiateCameraMove = E2.app.canInitiateCameraMove
 			WebVRConfig.getContainerMeta = E2.app.calculateCanvasArea
+			
 			onResize();
 		});
 
