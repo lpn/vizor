@@ -2028,10 +2028,10 @@ var kMiddleRadius = 0.75;
 var kInnerRadius = 0.3125;
 
 // Center line thickness in DP.
-var kCenterLineThicknessDp = 4;
+var kCenterLineThicknessDp = 2;
 
 // Button width in DP.
-var kButtonWidthDp = 28;
+var kButtonWidthDp = 20;
 
 // Factor to scale the touch area that responds to the touch.
 var kTouchSlopFactor = 1.5;
@@ -2156,6 +2156,8 @@ CardboardUI.prototype.onResize = function() {
 
     self.gearVertexCount = (vertices.length / 2) - self.gearOffset;
 
+/*   // gm: tapping on this does not work in iOS
+
     // Build back arrow
     self.arrowOffset = (vertices.length / 2);
 
@@ -2184,7 +2186,7 @@ CardboardUI.prototype.onResize = function() {
     addArrowVertex(kButtonWidthDp * dps, buttonScale + lineWidth);
 
     self.arrowVertexCount = (vertices.length / 2) - self.arrowOffset;
-
+*/
     // Buffer data
     gl.bindBuffer(gl.ARRAY_BUFFER, self.vertexBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -7558,7 +7560,7 @@ module.exports = TouchPanner;
  */
 var Util = window.Util || {};
 
-Util.MIN_TIMESTEP = 0.001;
+Util.MIN_TIMESTEP = 0.0007;
 Util.MAX_TIMESTEP = 1;
 
 Util.base64 = function(mimeType, base64) {
