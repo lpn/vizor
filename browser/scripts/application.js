@@ -62,6 +62,7 @@ function Application() {
 	// Make the UI visible now that we know that we can execute JS
 	$('.nodisplay').removeClass('nodisplay');
 
+	WebVRConfig = WebVRConfig || {}
 	WebVRConfig.canInitiateCameraMove = this.canInitiateCameraMove
 }
 

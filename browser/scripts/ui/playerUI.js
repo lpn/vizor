@@ -340,7 +340,6 @@ var VizorPlayerUI = function() {
 	// the canvas is positioned absolute within its container, which is sometimes hidden
 	// this makes sure we always return correct dimensions, even when the player isn't fullscreen or alone on the page
 	this.installDimensionsHandler = function() {
-		if (!window.WebVRConfig) window.WebVRConfig = {}
 		WebVRConfig.getContainerMeta = function() {
 			var stage = document.getElementById('stage')
 			var canvas = document.getElementById('webgl-canvas')
@@ -373,6 +372,9 @@ var VizorPlayerUI = function() {
     this.init = function () {
 		var that = this
 		var events = this.eventNames
+
+		if (!window.WebVRConfig) window.WebVRConfig = {}
+		
 		this.controlsBound = false
 		this.$body = $(document.body)
 		this.$canvas = $('#webgl-canvas')
@@ -462,6 +464,8 @@ VizorPlayerUI.prototype.enableVRcamera = function() {
 		var isCanvas = (!isKeyboard) && E2.util.isCanvasInFocus(e)
 		return siteUI.isFullScreen() || that.vrCameraEnabled && (isKeyboard || isCanvas)
 	}
+	WebVRConfig.canInitiateCameraMove = E2.app.canInitiateCameraMove
+
 }
 
 VizorPlayerUI.prototype.play = function() {
